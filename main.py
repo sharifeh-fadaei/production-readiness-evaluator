@@ -37,11 +37,15 @@ def main():
     print("-"*70)
     
     fault_types_to_test = [
-        FaultType.HALLUCINATION,
-        FaultType.PARAMETER_ERROR,
-        FaultType.CONTEXT_LOSS,
-        FaultType.ROLE_AMBIGUITY,
-    ]
+    FaultType.HALLUCINATION,
+    FaultType.PARAMETER_ERROR,
+    FaultType.CONTEXT_LOSS,
+    FaultType.ROLE_AMBIGUITY,
+    FaultType.BLIND_TRUST,
+    FaultType.INSTRUCTION_CONFLICT,
+    FaultType.INEXECUTABLE_PLAN,
+    FaultType.MESSAGE_CYCLE,
+]
     
     all_logs = []
     for fault_type in fault_types_to_test:

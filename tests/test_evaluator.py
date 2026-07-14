@@ -88,7 +88,7 @@ class TestDetectors:
             "steps_executed": ["research", "analyze", "verify"]
         }
         reports = suite.run_all(execution_log)
-        assert len(reports) == 4
+        assert len(reports) == 7
         assert "hallucination" in reports
         assert "role_confusion" in reports
 

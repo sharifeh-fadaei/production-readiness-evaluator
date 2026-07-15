@@ -5,6 +5,7 @@ from faults.scenarios import FaultScenario, ExecutionLog, DetectionResult
 from agents.target_agent import TargetAgent
 from agents.detectors import DetectorSuite
 import uuid
+from evaluator.flakiness_detector import FlakinessDetector
 
 class EvaluatorRunner:
     """Orchestrates fault injection, detection, and measurement"""
@@ -13,6 +14,8 @@ class EvaluatorRunner:
         self.target_agent = target_agent or TargetAgent()
         self.detector_suite = DetectorSuite()
         self.execution_logs = []
+        self.flakiness_detector = FlakinessDetector()
+
     
     def run_baseline(self, task: str) -> Dict[str, Any]:
         """Run target agent WITHOUT faults - establish ground truth"""
@@ -100,3 +103,15 @@ class EvaluatorRunner:
             "detection_rate": detected_count / total_runs if total_runs > 0 else 0,
             "per_detector": per_detector,
         }
+
+    def analyze_flakiness(self) -> Dict[str, Any]:
+        """Analyze flakiness for all faults tested"""
+        # Group logs by fault type
+        logs_by_fault = {}
+        for log in self.execution_logs:
+            fault_type = log.scenario.fault_type
+            if fault_type not in logs_by_fault:
+                logs_by_fault[fault_type] = []
+            logs_by_fault[fault_type].append(log)
+        # Generate flakiness report
+        return self.flakiness_detector.generate_flakiness_report(logs_by_fault)

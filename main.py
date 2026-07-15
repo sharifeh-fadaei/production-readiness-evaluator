@@ -42,15 +42,15 @@ def main():
     print("-"*70)
     
     fault_types_to_test = [
-    FaultType.HALLUCINATION,
-    FaultType.PARAMETER_ERROR,
-    FaultType.CONTEXT_LOSS,
-    FaultType.ROLE_AMBIGUITY,
-    FaultType.BLIND_TRUST,
-    FaultType.INSTRUCTION_CONFLICT,
-    FaultType.INEXECUTABLE_PLAN,
-    FaultType.MESSAGE_CYCLE,
-]
+        FaultType.HALLUCINATION,
+        FaultType.PARAMETER_ERROR,
+        FaultType.CONTEXT_LOSS,
+        FaultType.ROLE_AMBIGUITY,
+        FaultType.BLIND_TRUST,
+        FaultType.INSTRUCTION_CONFLICT,
+        FaultType.INEXECUTABLE_PLAN,
+        FaultType.MESSAGE_CYCLE,
+    ]
     
     all_logs = []
     for fault_type in fault_types_to_test:
@@ -74,13 +74,25 @@ def main():
     print(f"Overall Reliability Score: {overall_score}%")
     full_summary = aggregator.get_summary()
     tracer.trace_aggregation(full_summary)
+
+    # Step 3B: Flakiness Analysis
+    print("\n" + "-"*70)
+    print("STEP 3B: Flakiness Analysis")
+    print("-"*70)
+    flakiness_report = runner.analyze_flakiness()
+    for fault_type, flakiness_data in flakiness_report.items():
+        consistency = flakiness_data["consistency"]["result"]
+        variance = flakiness_data["variance"]["output_variance"]
+        print(f"\n{fault_type.upper()}:")
+        print(f"  Consistency: {consistency}")
+        print(f"  Output Variance: {variance}")
+        print(f"  Recommendation: {flakiness_data['recommendation'][:80]}...")
     
     # Step 4: Generate report
     print("\n" + "-"*70)
     print("STEP 4: Report Generation")
     print("-"*70)
     
-    full_summary = aggregator.get_summary()
     report = report_gen.generate_report(full_summary, system_name=target_agent.name)
     
     # Print and save report

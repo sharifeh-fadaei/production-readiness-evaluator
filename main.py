@@ -3,6 +3,7 @@ from evaluator.runner import EvaluatorRunner
 from evaluator.aggregator import MetricsAggregator
 from evaluator.report_generator import ReportGenerator
 from faults.taxonomy import FaultType
+from evaluator.langfuse_tracer import EvaluatorTracer
 
 def main():
     """Run complete evaluation pipeline"""
@@ -16,6 +17,9 @@ def main():
     runner = EvaluatorRunner(target_agent)
     aggregator = MetricsAggregator()
     report_gen = ReportGenerator()
+
+    # Initialize tracer (disabled by default, enable with env vars)
+    tracer = EvaluatorTracer(enabled=False)
     
     # Test task
     task = "What is the population of Berlin?"
@@ -30,6 +34,7 @@ def main():
     baseline = runner.run_baseline(task)
     print(f"Baseline status: {baseline['status']}")
     print(f"Baseline output: {baseline['verification'][:80]}...")
+    tracer.trace_baseline_run(task, baseline)
     
     # Step 2: Run fault injections
     print("\n" + "-"*70)
@@ -58,6 +63,7 @@ def main():
         print(f"  → Detected: {metrics['detected']}/{metrics['total_runs']}")
         
         all_logs.extend(logs)
+        tracer.trace_aggregation(metrics)
     
     # Step 3: Aggregate results
     print("\n" + "-"*70)
@@ -66,6 +72,8 @@ def main():
     summary = aggregator.aggregate(all_logs)
     overall_score = aggregator.calculate_overall_score()
     print(f"Overall Reliability Score: {overall_score}%")
+    full_summary = aggregator.get_summary()
+    tracer.trace_aggregation(full_summary)
     
     # Step 4: Generate report
     print("\n" + "-"*70)
@@ -77,6 +85,8 @@ def main():
     
     # Print and save report
     report_gen.print_report(report)
+    tracer.trace_report(report)
+    tracer.flush()
     
     filename = report_gen.save_report(report)
     print(f"Report saved to: {filename}")

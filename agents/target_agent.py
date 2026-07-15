@@ -1,5 +1,6 @@
 from typing import Dict, Any
 from dataclasses import dataclass, field
+from evaluator.openrouter_client import OpenRouterClient
 
 @dataclass
 class AgentState:
@@ -13,29 +14,40 @@ class AgentState:
     steps_executed: list = field(default_factory=list)
 
 class TargetAgent:
-    """Simple 3-agent system: Research → Analyze → Verify"""
+    """Multi-agent system using real LLM: Research → Analyze → Verify"""
     
-    def __init__(self, name: str = "MultiAgentSystem"):
+    def __init__(self, name: str = "MultiAgentSystem", model: str = "openai/gpt-3.5-turbo"):
         self.name = name
+        self.model = model
+        self.llm = OpenRouterClient(model=model)
         self.state = None
     
     def research_agent(self, query: str) -> str:
-        """Agent 1: Researches and finds information"""
-        result = f"Research on '{query}': Found data about population, economy, and history."
-        return result
+        """Agent 1: Research and find information using LLM"""
+        prompt = f"You are a research agent. Find and summarize key information about: {query}. Be factual and concise."
+        try:
+            result = self.llm.call(prompt, temperature=0.3)
+            return result
+        except Exception as e:
+            return f"Research failed: {str(e)}"
     
     def analyzer_agent(self, research: str) -> str:
-        """Agent 2: Analyzes the research"""
-        result = f"Analysis: {research} → Key insights include significant economic indicators."
-        return result
+        """Agent 2: Analyze the research using LLM"""
+        prompt = f"You are an analyst. Analyze this research and draw key insights:\n\n{research}\n\nProvide 2-3 key insights."
+        try:
+            result = self.llm.call(prompt, temperature=0.5)
+            return result
+        except Exception as e:
+            return f"Analysis failed: {str(e)}"
     
     def verifier_agent(self, analysis: str) -> str:
-        """Agent 3: Verifies the analysis is sound"""
-        if "Key insights" in analysis:
-            result = f"Verification: Analysis is VALID and well-reasoned."
-        else:
-            result = f"Verification: Analysis is INVALID or incomplete."
-        return result
+        """Agent 3: Verify the analysis using LLM"""
+        prompt = f"You are a verifier. Check if this analysis is sound and well-reasoned:\n\n{analysis}\n\nRespond with VALID or INVALID and explain why."
+        try:
+            result = self.llm.call(prompt, temperature=0.2)
+            return result
+        except Exception as e:
+            return f"Verification failed: {str(e)}"
     
     def run(self, query: str) -> Dict[str, Any]:
         """Execute the 3-agent pipeline"""

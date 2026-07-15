@@ -1,12 +1,12 @@
 import pytest
-from agents.target_agent import TargetAgent
-from faults.taxonomy import FaultType
-from faults.injector import FaultInjector
-from faults.scenarios import FaultScenario, ExecutionLog, DetectionResult
-from agents.detectors import DetectorSuite, HallucinationDetector, RoleConfusionDetector
-from evaluator.runner import EvaluatorRunner
-from evaluator.aggregator import MetricsAggregator
-from evaluator.report_generator import ReportGenerator
+from probe.agents.target_agent import TargetAgent
+from probe.faults.taxonomy import FaultType
+from probe.faults.injector import FaultInjector
+from probe.faults.scenarios import FaultScenario, ExecutionLog, DetectionResult
+from probe.agents.detectors import DetectorSuite, HallucinationDetector, RoleConfusionDetector
+from probe.evaluator.runner import EvaluatorRunner
+from probe.evaluator.aggregator import MetricsAggregator
+from probe.evaluator.report_generator import ReportGenerator
 
 class TestTargetAgent:
     """Test the target agent"""

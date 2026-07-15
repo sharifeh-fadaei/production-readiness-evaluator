@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from typing import Dict, Any
-from faults.taxonomy import FaultType
+from probe.faults.taxonomy import FaultType
 
 @dataclass
 class FaultScenario:

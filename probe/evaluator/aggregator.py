@@ -1,6 +1,6 @@
 from typing import Dict, List, Any
-from faults.scenarios import ExecutionLog, FaultMetrics
-from faults.taxonomy import FaultType
+from probe.faults.scenarios import ExecutionLog, FaultMetrics
+from probe.faults.taxonomy import FaultType
 
 class MetricsAggregator:
     """Aggregates results across all fault types"""

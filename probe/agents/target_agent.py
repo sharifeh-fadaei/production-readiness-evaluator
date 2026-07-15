@@ -1,6 +1,6 @@
 from typing import Dict, Any
 from dataclasses import dataclass, field
-from evaluator.openrouter_client import OpenRouterClient
+from probe.evaluator.openrouter_client import OpenRouterClient
 
 @dataclass
 class AgentState:

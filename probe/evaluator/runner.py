@@ -1,11 +1,11 @@
 from typing import Dict, List, Any
-from faults.taxonomy import FaultType
-from faults.injector import FaultInjector
-from faults.scenarios import FaultScenario, ExecutionLog, DetectionResult
-from agents.target_agent import TargetAgent
-from agents.detectors import DetectorSuite
+from probe.faults.taxonomy import FaultType
+from probe.faults.injector import FaultInjector
+from probe.faults.scenarios import FaultScenario, ExecutionLog, DetectionResult
+from probe.agents.target_agent import TargetAgent
+from probe.agents.detectors import DetectorSuite
 import uuid
-from evaluator.flakiness_detector import FlakinessDetector
+from probe.evaluator.flakiness_detector import FlakinessDetector
 
 class EvaluatorRunner:
     """Orchestrates fault injection, detection, and measurement"""

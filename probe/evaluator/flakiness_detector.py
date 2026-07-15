@@ -1,6 +1,6 @@
 from typing import List, Dict, Any
-from faults.scenarios import ExecutionLog
-from faults.taxonomy import FaultType
+from probe.faults.scenarios import ExecutionLog
+from probe.faults.taxonomy import FaultType
 
 class FlakinessDetector:
     """Detects if faults are deterministic or random (flaky)"""

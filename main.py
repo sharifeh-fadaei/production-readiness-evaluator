@@ -1,4 +1,5 @@
 from agents.target_agent import TargetAgent
+from agents.breaker_agent import BreakerAgent
 from evaluator.runner import EvaluatorRunner
 from evaluator.aggregator import MetricsAggregator
 from evaluator.report_generator import ReportGenerator
@@ -87,6 +88,26 @@ def main():
         print(f"  Consistency: {consistency}")
         print(f"  Output Variance: {variance}")
         print(f"  Recommendation: {flakiness_data['recommendation'][:80]}...")
+    
+    # Step 3C: Run adversarial attacks (Breaker Agent)
+    print("\n" + "-"*70)
+    print("STEP 3C: Adversarial Attack Testing (Breaker Agent)")
+    print("-"*70)
+    
+    breaker = BreakerAgent(model="openai/gpt-3.5-turbo")
+    print("\nRunning adversarial attacks to find vulnerabilities...")
+    attack_results = breaker.run_attack_sequence(target_agent, num_attacks=5)
+    
+    print(f"Total attacks: {attack_results['total_attacks']}")
+    print(f"Successful breaks: {attack_results['successful_breaks']}")
+    print(f"Break rate: {attack_results['break_rate']*100:.0f}%")
+    print(f"Resilience score: {attack_results['resilience_score']*100:.0f}%")
+    
+    print("\nAttack details:")
+    for attack in attack_results['attacks']:
+        status = "✓ Contained" if not attack['break_successful'] else "✗ Broken"
+        print(f"  Attack {attack['attack_num']}: {status}")
+        print(f"    Detectors missed: {attack['detectors_missed']}")
     
     # Step 4: Generate report
     print("\n" + "-"*70)

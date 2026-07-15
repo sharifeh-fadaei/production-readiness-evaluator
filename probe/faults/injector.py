@@ -1,5 +1,5 @@
 from typing import Any, Dict
-from faults.taxonomy import FaultType
+from probe.faults.taxonomy import FaultType
 
 class FaultInjector:
     """Injects faults into agent execution"""
